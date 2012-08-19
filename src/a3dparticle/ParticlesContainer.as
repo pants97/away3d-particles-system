@@ -122,51 +122,64 @@ package a3dparticle
 			var vertexData:Vector.<Number>;
 			var uvData:Vector.<Number>;
 			var indexData:Vector.<uint>;
+			var subVertexData:Vector.<Number>;
+			var subUVData:Vector.<Number>;
+			var subIndexData:Vector.<uint>;
 			var j:uint;
 			var length:uint;
 			var param:ParticleParam;
 			var tempIndex:uint;
-			var tempLength:uint;
 			var nowVertexLen:int;
+			var sample:ParticleSample;
+			var numSamples:uint = _vec.length;
+			var subContainer:SubContainer;
 			
-			for (var i:uint = 0; i < _vec.length; i++)
+			for (var i:uint = 0; i < numSamples; i++)
 			{
+				sample = _vec[i];
 				for (j = 0; j < _subContainers.length; j++)
 				{
-					if (_subContainers[j].particleMaterial == _vec[i].material) break;
+					subContainer = _subContainers[j];
+					if (subContainer.particleMaterial == sample.material) break;
 				}
 				if (j == _subContainers.length)
 				{
-					_subContainers[j] = new SubContainer(this, _vec[i].material);
+					_subContainers[j] = subContainer = new SubContainer(this, sample.material);
 				}
-				length = _vec[i].subGem.vertexData.length;
-				indexData = _vec[i].subGem.indexData;
-				vertexData = _vec[i].subGem.vertexData;
-				uvData = _vec[i].subGem.UVData;
+				indexData = sample.subGem.indexData;
+				vertexData = sample.subGem.vertexData;
+				uvData = sample.subGem.UVData;
 				
-				_subContainers[j].numTriangles += _vec[i].subGem.numTriangles;
-				nowVertexLen = _subContainers[j].vertexData.length / 3;
-				for (tempIndex = 0; tempIndex < indexData.length; tempIndex += 3)
+				subIndexData = subContainer.indexData;
+				subVertexData = subContainer.vertexData;
+				subUVData = subContainer.UVData;
+				
+				subContainer.numTriangles += sample.subGem.numTriangles;
+				nowVertexLen = subVertexData.length / 3;
+				length = indexData.length;
+				for (tempIndex = 0; tempIndex < length; tempIndex += 3)
 				{
-					_subContainers[j].indexData.push(indexData[tempIndex] + nowVertexLen, indexData[tempIndex + 1] + nowVertexLen, indexData[tempIndex + 2] + nowVertexLen);
+					subIndexData.push(indexData[tempIndex] + nowVertexLen, indexData[tempIndex + 1] + nowVertexLen, indexData[tempIndex + 2] + nowVertexLen);
 				}
-				for (tempIndex = 0; tempIndex < uvData.length; tempIndex += 2)
+				length = uvData.length;
+				for (tempIndex = 0; tempIndex < length; tempIndex += 2)
 				{
-					_subContainers[j].UVData.push(uvData[tempIndex], uvData[tempIndex + 1]);
+					subUVData.push(uvData[tempIndex], uvData[tempIndex + 1]);
 				}
 				
 				param = initParticleParam();
-				param.total = _vec.length;
+				param.total = numSamples;
 				param.index = i;
-				param.sample = _vec[i];
+				param.sample = sample;
 				
 				if (initParticleFun != null) initParticleFun(param);
 				
 				_particleAnimation.genOne(param);
+				length = vertexData.length;
 				for (tempIndex = 0; tempIndex < length; tempIndex += 3)
 				{
-					_subContainers[j].vertexData.push(vertexData[tempIndex], vertexData[tempIndex + 1], vertexData[tempIndex + 2]);
-					_particleAnimation.distributeOne(i, tempIndex, _subContainers[j]);
+					subVertexData.push(vertexData[tempIndex], vertexData[tempIndex + 1], vertexData[tempIndex + 2]);
+					_particleAnimation.distributeOne(i, tempIndex, subContainer);
 				}
 				
 			}
@@ -245,6 +258,7 @@ package a3dparticle
 			clone.bounds = _bounds.clone();
 			clone.name = name;
 
+			var numChildren:uint = this.numChildren;
 			for (var i:int = 0; i < numChildren; ++i) {
 				clone.addChild(ObjectContainer3D(getChildAt(i).clone()));
 			}
