@@ -1,7 +1,7 @@
-package a3dparticle.core
-{
+package a3dparticle.core {
 	import a3dparticle.animators.ParticleAnimation;
 	import a3dparticle.particle.ParticleMaterialBase;
+
 	import away3d.animators.IAnimationSet;
 	import away3d.arcane;
 	import away3d.cameras.Camera3D;
@@ -9,7 +9,7 @@ package a3dparticle.core
 	import away3d.core.managers.Stage3DProxy;
 	import away3d.materials.lightpickers.LightPickerBase;
 	import away3d.materials.passes.MaterialPassBase;
-	import flash.display3D.Context3D;
+
 	import flash.display3D.Context3DProgramType;
 	import flash.display3D.Context3DVertexBufferFormat;
 	import flash.geom.Utils3D;
@@ -23,30 +23,29 @@ package a3dparticle.core
 	public class SimpleParticlePass extends MaterialPassBase
 	{
 		private var _particleMaterial:ParticleMaterialBase;
+		private var _particleAnimation:ParticleAnimation;
+		private var _programConstantData:Vector.<Number>;
 		
 		public function SimpleParticlePass(particleMaterial:ParticleMaterialBase)
 		{
 			super();
 			this._particleMaterial = particleMaterial;
+			_programConstantData = new Vector.<Number>(4, true);
+			_programConstantData[3] = 0;
 		}
 		
 		override public function set animationSet(value : IAnimationSet) : void
 		{
 			if (animationSet == value) return;
-			if (value is ParticleAnimation)
+			if (_particleAnimation = value as ParticleAnimation)
 			{
-				_particleMaterial.initAnimation(value as ParticleAnimation);
+				_particleMaterial.initAnimation(_particleAnimation);
 				super.animationSet = value;
 			}
 			else
 			{
 				throw(new Error("animationSet not match!"));
 			}
-		}
-		
-		private function get _particleAnimation():ParticleAnimation
-		{
-			return  animationSet as ParticleAnimation;
 		}
 		
 		/**
@@ -70,13 +69,7 @@ package a3dparticle.core
 		
 		arcane override function getVertexCode(code:String) : String
 		{
-			code += getProjectionCode(_animationTargetRegisters[0]);
-			return code;
-		}
-		
-		private function getProjectionCode(positionRegister : String) : String
-		{
-			var code : String = "m44 vt7, vt0, vc0\nmul op, vt7, vc4\n";
+			code += "m44 vt7, vt0, vc0\nmul op, vt7, vc4\n";
 			return code;
 		}
 		
@@ -100,15 +93,15 @@ package a3dparticle.core
 			{
 				if (_particleAnimation.needCameraPosition)
 				{
-					var context : Context3D = stage3DProxy._context3D;
 					var pos:Vector3D = Utils3D.projectVector(renderable.inverseSceneTransform, camera.scenePosition);
-					context.setProgramConstantsFromVector(Context3DProgramType.VERTEX, _particleAnimation.cameraPosConst.index, Vector.<Number>([pos.x,pos.y,pos.z,0]));
+					_programConstantData[0] = pos.x, _programConstantData[1] = pos.y, _programConstantData[2] = pos.z;
+					stage3DProxy._context3D.setProgramConstantsFromVector(Context3DProgramType.VERTEX, _particleAnimation.cameraPosConst.index, _programConstantData);
 				}
 				if (_particleAnimation.needUV)
 				{
 					stage3DProxy.setSimpleVertexBuffer(_particleAnimation.uvAttribute.index, renderable.getUVBuffer(stage3DProxy), Context3DVertexBufferFormat.FLOAT_2, 0);
 				}
-				_particleMaterial.render(_particleAnimation, renderable, stage3DProxy , camera );
+				_particleMaterial.render(_particleAnimation, renderable as SubContainer, stage3DProxy , camera );
 				super.render(renderable, stage3DProxy , camera , lightPicker);
 			}
 		}

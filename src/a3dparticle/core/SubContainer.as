@@ -1,5 +1,6 @@
 package a3dparticle.core
 {
+	import a3dparticle.animators.ParticleAnimationtor;
 	import a3dparticle.particle.ParticleMaterialBase;
 	import a3dparticle.ParticlesContainer;
 	import away3d.animators.IAnimator;
@@ -77,7 +78,12 @@ package a3dparticle.core
 		
 		public function get animator() : IAnimator
 		{
-			return ParticlesContainer(_parent).animator;
+			return _parent.animator;
+		}
+		
+		public function get particleAnimator() : ParticleAnimationtor
+		{
+			return _parent.animator;
 		}
 		
 		public function get shaderPickingDetails() : Boolean

@@ -1,8 +1,7 @@
-package a3dparticle.core
-{
+package a3dparticle.core {
 	import a3dparticle.animators.ParticleAnimationtor;
 	import a3dparticle.particle.ParticleMaterialBase;
-	import away3d.animators.AnimationSetBase;
+
 	import away3d.animators.IAnimationSet;
 	import away3d.arcane;
 	import away3d.core.base.IMaterialOwner;
@@ -10,7 +9,7 @@ package a3dparticle.core
 	import away3d.core.managers.Stage3DProxy;
 	import away3d.core.traverse.EntityCollector;
 	import away3d.materials.MaterialBase;
-	import flash.display.BlendMode;
+
 	import flash.display3D.Context3D;
 	
 	
@@ -32,21 +31,19 @@ package a3dparticle.core
 			this._particleMaterial = particleMaterial;
 			addPass(_screenPass = new SimpleParticlePass(particleMaterial));
 			_screenPass.material = this;
-			cpoyParam();
+			copyParameters();
 		}
 		
-		private function cpoyParam():void
+		private function copyParameters():void
 		{
 			bothSides = _particleMaterial.bothSides;
 			blendMode = _particleMaterial.blendMode;
 		}
-		
 
 		override  public function get bothSides() : Boolean
 		{
 			return _particleMaterial.bothSides;
 		}
-
 		
 		/**
 		 * @inheritDoc
@@ -74,7 +71,7 @@ package a3dparticle.core
 		
 		override arcane function updateMaterial(context : Context3D) : void
 		{
-			cpoyParam();
+			copyParameters();
 			if (renderTimes != _particleMaterial.renderTimes)
 			{
 				invalidatePasses(null);
@@ -83,21 +80,23 @@ package a3dparticle.core
 			super.updateMaterial(context);
 		}
 		
-		
 		override arcane function renderPass(index : uint, renderable : IRenderable, stage3DProxy : Stage3DProxy, entityCollector : EntityCollector) : void
 		{
-			if (renderable is SubContainer)
+			var subContainer:SubContainer = renderable as SubContainer;
+			if (subContainer)
 			{
+				var particleAnimator:ParticleAnimationtor = subContainer.particleAnimator;
 				for (var i:int = 0; i < renderTimes; i++)
 				{
-					ParticleAnimationtor(SubContainer(renderable).animator).passCount = i;
-					ParticleAnimationtor(SubContainer(renderable).animator).offestTime = -i * _particleMaterial.timeInterval;
+					particleAnimator.passCount = i;
+					particleAnimator.offestTime = -i * _particleMaterial.timeInterval;
+					
 					super.renderPass(index, renderable, stage3DProxy, entityCollector);
 				}
 			}
 			
 		}
-		
+
 	}
 
 }

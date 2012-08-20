@@ -1,10 +1,14 @@
-package a3dparticle.particle
-{
+package a3dparticle.particle {
 	import a3dparticle.animators.ParticleAnimation;
+	import a3dparticle.core.SubContainer;
+
+	import away3d.arcane;
 	import away3d.cameras.Camera3D;
-	import away3d.core.base.IRenderable;
 	import away3d.core.managers.Stage3DProxy;
+
 	import flash.display3D.Context3DProgramType;
+
+	use namespace arcane;
 	
 	/**
 	 * ...
@@ -36,10 +40,10 @@ package a3dparticle.particle
 			return code;
 		}
 		
-		override public function render(_particleAnimation:ParticleAnimation, renderable : IRenderable, stage3DProxy : Stage3DProxy, camera : Camera3D) : void
+		override public function render(_particleAnimation:ParticleAnimation, renderable : SubContainer, stage3DProxy : Stage3DProxy, camera : Camera3D) : void
 		{
 			super.render(_particleAnimation, renderable, stage3DProxy, camera);
-			stage3DProxy.context3D.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, _particleAnimation.colorDefalut.index, _colorData, 1);
+			stage3DProxy._context3D.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, _particleAnimation.colorDefalut.index, _colorData, 1);
 		}
 		
 	}
