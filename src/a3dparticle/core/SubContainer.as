@@ -243,6 +243,15 @@ package a3dparticle.core
 		{
 			return _shareAtt.geometryId;
 		}
+
+		public function jumpStart(stage3DProxy:Stage3DProxy):void
+		{
+			getVertexBuffer(stage3DProxy);
+			getIndexBuffer(stage3DProxy);
+			getUVBuffer(stage3DProxy);
+			_material.jumpStart(stage3DProxy);
+			particleAnimator.jumpStart(stage3DProxy, this);
+		}
 		
 	}
 }

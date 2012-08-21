@@ -10,6 +10,7 @@ package a3dparticle.core {
 	import away3d.materials.lightpickers.LightPickerBase;
 	import away3d.materials.passes.MaterialPassBase;
 
+	import flash.display3D.Context3D;
 	import flash.display3D.Context3DProgramType;
 	import flash.display3D.Context3DVertexBufferFormat;
 	import flash.geom.Utils3D;
@@ -25,6 +26,7 @@ package a3dparticle.core {
 		private var _particleMaterial:ParticleMaterialBase;
 		private var _particleAnimation:ParticleAnimation;
 		private var _programConstantData:Vector.<Number>;
+		private var _context3Ds:Vector.<Context3D>;
 		
 		public function SimpleParticlePass(particleMaterial:ParticleMaterialBase)
 		{
@@ -32,12 +34,14 @@ package a3dparticle.core {
 			this._particleMaterial = particleMaterial;
 			_programConstantData = new Vector.<Number>(4, true);
 			_programConstantData[3] = 0;
+			
+			_context3Ds = new Vector.<Context3D>(8, true);
 		}
 		
 		override public function set animationSet(value : IAnimationSet) : void
 		{
 			if (animationSet == value) return;
-			if (_particleAnimation = value as ParticleAnimation)
+			if ((_particleAnimation = value as ParticleAnimation) != null)
 			{
 				_particleMaterial.initAnimation(_particleAnimation);
 				super.animationSet = value;
@@ -61,10 +65,16 @@ package a3dparticle.core {
 		
 		override arcane function updateProgram(stage3DProxy : Stage3DProxy) : void
 		{
-			super.updateProgram(stage3DProxy);
-			_numUsedTextures = _particleAnimation.shaderRegisterCache.numUsedTextures;
-			_numUsedStreams = _particleAnimation.shaderRegisterCache.numUsedStreams;
-			
+			var contextIndex:int = stage3DProxy._stage3DIndex;
+			var context:Context3D = stage3DProxy._context3D;
+			if (_context3Ds[contextIndex] != context || !_program3Ds[contextIndex])
+			{
+				_context3Ds[contextIndex] = context;
+				super.updateProgram(stage3DProxy);
+				
+				_numUsedTextures = _particleAnimation.shaderRegisterCache.numUsedTextures;
+				_numUsedStreams = _particleAnimation.shaderRegisterCache.numUsedStreams;
+			}
 		}
 		
 		arcane override function getVertexCode(code:String) : String
@@ -104,6 +114,12 @@ package a3dparticle.core {
 				_particleMaterial.render(_particleAnimation, renderable as SubContainer, stage3DProxy , camera );
 				super.render(renderable, stage3DProxy , camera , lightPicker);
 			}
+		}
+
+		public function jumpStart(stage3DProxy:Stage3DProxy):void
+		{
+			updateProgram(stage3DProxy);
+			_particleMaterial.jumpStart(stage3DProxy);
 		}
 		
 	}

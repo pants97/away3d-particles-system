@@ -1,5 +1,5 @@
-package a3dparticle.animators
-{
+package a3dparticle.animators {
+	import a3dparticle.core.SubContainer;
 	import away3d.animators.AnimatorBase;
 	import away3d.animators.IAnimator;
 	import away3d.animators.transitions.StateTransitionBase;
@@ -64,6 +64,11 @@ package a3dparticle.animators
 		public function testGPUCompatibility(pass : MaterialPassBase) : void
 		{
 			
+		}
+
+		public function jumpStart(stage3DProxy:Stage3DProxy, subContainer:SubContainer):void
+		{
+			_particleAnimation.jumpStart(stage3DProxy, subContainer);
 		}
 		
 	}

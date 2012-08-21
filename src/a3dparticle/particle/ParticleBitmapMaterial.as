@@ -5,6 +5,7 @@ package a3dparticle.particle {
 	import away3d.arcane;
 	import away3d.cameras.Camera3D;
 	import away3d.core.managers.Stage3DProxy;
+	import away3d.materials.utils.DefaultMaterialManager;
 	import away3d.materials.utils.ShaderRegisterElement;
 	import away3d.textures.BitmapTexture;
 
@@ -26,6 +27,9 @@ package a3dparticle.particle {
 		private var _alphaThreshold:Number;
 		private var _cutOffData : Vector.<Number>;
 		private var cutOffReg:ShaderRegisterElement;
+		
+		private var _finalBitmapDataReceived:Boolean;
+		private var _jumpStartStage3DProxy:Stage3DProxy;
 		
 		public function ParticleBitmapMaterial(bitmap:BitmapData, smooth:Boolean = true, repeat : Boolean = false, mipmap : Boolean = true, alphaThreshold:Number = 0)
 		{
@@ -50,6 +54,12 @@ package a3dparticle.particle {
 		public function set bitmapData(value:BitmapData):void
 		{
 			_texture.bitmapData = value;
+			
+			if ((_finalBitmapDataReceived = (value && value != DefaultMaterialManager.getDefaultTexture().bitmapData)) && _jumpStartStage3DProxy)
+			{
+				jumpStart(_jumpStartStage3DProxy);
+				_jumpStartStage3DProxy = null;
+			}
 		}
 		
 		override public function getFragmentCode(_particleAnimation:ParticleAnimation):String
@@ -90,6 +100,17 @@ package a3dparticle.particle {
 			}
 		}
 		
+
+		override public function jumpStart(stage3DProxy:Stage3DProxy):void
+		{
+			if (_finalBitmapDataReceived)
+			{
+				_texture.getTextureForStage3D(stage3DProxy);
+				stage3DProxy = null;
+			}
+
+			_jumpStartStage3DProxy = stage3DProxy;
+		}
 		
 	}
 

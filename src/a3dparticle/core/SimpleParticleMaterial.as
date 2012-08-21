@@ -69,15 +69,19 @@ package a3dparticle.core {
 			return;
 		}
 		
-		override arcane function updateMaterial(context : Context3D) : void
+		override arcane function updateMaterial(context : Context3D) : void {
+			updatePassParameters();
+
+			super.updateMaterial(context);
+		}
+
+		private function updatePassParameters():void
 		{
 			copyParameters();
-			if (renderTimes != _particleMaterial.renderTimes)
-			{
+			if (renderTimes != _particleMaterial.renderTimes) {
 				invalidatePasses(null);
 				renderTimes = _particleMaterial.renderTimes;
 			}
-			super.updateMaterial(context);
 		}
 		
 		override arcane function renderPass(index : uint, renderable : IRenderable, stage3DProxy : Stage3DProxy, entityCollector : EntityCollector) : void
@@ -95,6 +99,17 @@ package a3dparticle.core {
 				}
 			}
 			
+		}
+
+		public function jumpStart(stage3DProxy:Stage3DProxy):void
+		{
+			updatePassParameters();
+
+			var numPasses:uint = this.numPasses;
+			for (var i:uint = 0; i < numPasses; ++i)
+			{
+				SimpleParticlePass(_passes[i]).jumpStart(stage3DProxy);
+			}
 		}
 
 	}

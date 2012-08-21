@@ -365,6 +365,15 @@ package a3dparticle.animators
 			
 		}
 		
+		public function jumpStart(stage3DProxy:Stage3DProxy, subContainer:SubContainer):void
+		{
+			var len:uint = _particleActions.length;
+			for (var i:uint = 0; i < len; ++i)
+			{
+				_particleActions[i].jumpStart(stage3DProxy, subContainer);
+			}
+		}
+		
 	}
 
 }

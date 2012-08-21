@@ -1,5 +1,5 @@
-package a3dparticle
-{
+package a3dparticle {
+	import away3d.core.managers.Stage3DProxy;
 	import a3dparticle.animators.actions.ActionBase;
 	import a3dparticle.animators.ParticleAnimation;
 	import a3dparticle.animators.ParticleAnimationtor;
@@ -263,6 +263,15 @@ package a3dparticle
 				clone.addChild(ObjectContainer3D(getChildAt(i).clone()));
 			}
 			return clone;
+		}
+
+		public function jumpStart(stage3DProxy:Stage3DProxy):void
+		{
+			var len:uint = _subContainers.length;
+			for (var i:uint = 0; i < len; ++i)
+			{
+				_subContainers[i].jumpStart(stage3DProxy);
+			}
 		}
 		
 	}

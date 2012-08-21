@@ -1,5 +1,6 @@
 package a3dparticle.animators.actions 
 {
+	import a3dparticle.core.SubContainer;
 	import a3dparticle.animators.ParticleAnimation;
 	import away3d.core.base.IRenderable;
 	import away3d.core.managers.Stage3DProxy;
@@ -50,6 +51,11 @@ package a3dparticle.animators.actions
 		}
 		
 		public function setRenderState(stage3DProxy : Stage3DProxy, renderable : IRenderable) : void
+		{
+			
+		}
+
+		public function jumpStart(stage3DProxy:Stage3DProxy, subContainer:SubContainer):void
 		{
 			
 		}

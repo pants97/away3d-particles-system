@@ -60,6 +60,11 @@ package a3dparticle.animators.actions
 			return t;
 		}
 		
+		override public function jumpStart(stage3DProxy:Stage3DProxy, subContainer:SubContainer):void
+		{
+			getExtraBuffer(stage3DProxy, subContainer);
+		}
+		
 	}
 
 }

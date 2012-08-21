@@ -116,6 +116,10 @@ package a3dparticle.particle
 				stage3DProxy._context3D.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, _particleAnimation.fadeFactorConst.index, rawData, 1);
 			}
 		}
+
+		public function jumpStart(stage3DProxy:Stage3DProxy):void
+		{
+		}
 	}
 
 }
