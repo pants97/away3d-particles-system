@@ -252,6 +252,7 @@ package a3dparticle.core {
 			jumpStartTraverser.apply(this);
 			jumpStartTraverser.pushJumpStarter(this);
 
+			_particleMaterial.acceptTraverser(jumpStartTraverser);
 			_material.acceptTraverser(jumpStartTraverser);
 			particleAnimator.acceptTraverser(jumpStartTraverser);
 		}

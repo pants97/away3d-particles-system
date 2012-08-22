@@ -125,8 +125,6 @@ package a3dparticle.core {
 		public function acceptTraverser(jumpStartTraverser:JumpStartTraverser):void
 		{
 			jumpStartTraverser.apply(this);
-			
-			_particleMaterial.acceptTraverser(jumpStartTraverser);
 		}
 
 		public function jumpStart(jumpStarter:JumpStarter):void
