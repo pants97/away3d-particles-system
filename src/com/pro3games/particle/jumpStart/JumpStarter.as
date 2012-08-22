@@ -77,14 +77,12 @@ package com.pro3games.particle.jumpStart {
 		}
 		
 		public function proceed():Boolean {
-			var jumpStarteesCount:uint = fJumpStarteesStack.length;
-			if (jumpStarteesCount > 0) {
-				var index:uint = jumpStarteesCount - 1;
-				this.index = fIndezesStack[index];
-				var jumpStartee:JumpStartee = fJumpStarteesStack[index];
+			if (fJumpStarteesStack.length > 0) {
+				index = fIndezesStack[0];
+				var jumpStartee:JumpStartee = fJumpStarteesStack[0];
 				jumpStartee.jumpStart(this);
-				if (index < fJumpStarteesStack.length && fJumpStarteesStack[index] == jumpStartee) {
-					fIndezesStack[index] = this.index;
+				if (fJumpStarteesStack.length > 0 && fJumpStarteesStack[0] == jumpStartee) {
+					fIndezesStack[0] = index;
 				}
 			}
 			return (fJumpStarteesStack.length > 0);

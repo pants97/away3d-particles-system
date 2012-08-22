@@ -15,6 +15,7 @@ package com.pro3games.particle.jumpStart {
 		}
 		
 		public function clear():void {
+			fJumpStarter = null;
 			fJumpStartersStack.length = 0;
 			fStage3DProxy = null;
 		}
@@ -33,26 +34,17 @@ package com.pro3games.particle.jumpStart {
 		}
 		
 		public function proceed():Boolean {
-			if (fJumpStarter.hasJumpStartees() && !fJumpStarter.proceed()) {
-				JumpStarter.put(fJumpStarter);
-				popJumpStarter();
+			var jumpStarter:JumpStarter = fJumpStartersStack[0];
+			if (jumpStarter.hasJumpStartees() && !jumpStarter.proceed()) {
+				JumpStarter.put(jumpStarter);
+				fJumpStartersStack.shift();
 			}
-			return (fJumpStarter != null);
+			return (fJumpStartersStack.length > 0);
 		}
 		
 		public function pushJumpStarter(subContainer:SubContainer = null):void {
 			fJumpStarter = JumpStarter.get(fStage3DProxy, subContainer);
 			fJumpStartersStack.push(fJumpStarter);
-		}
-
-		private function popJumpStarter():void {
-			fJumpStartersStack.pop();
-			var jumpStartersCount:uint = fJumpStartersStack.length;
-			if (jumpStartersCount > 0) {
-				fJumpStarter = fJumpStartersStack[jumpStartersCount - 1];
-			} else {
-				fJumpStarter = null;
-			}
 		}
 	}
 }
