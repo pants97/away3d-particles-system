@@ -1,13 +1,13 @@
 package a3dparticle {
-	import away3d.core.managers.Stage3DProxy;
-	import a3dparticle.animators.actions.ActionBase;
 	import a3dparticle.animators.ParticleAnimation;
 	import a3dparticle.animators.ParticleAnimationtor;
+	import a3dparticle.animators.actions.ActionBase;
 	import a3dparticle.core.ParticlesNode;
 	import a3dparticle.core.SubContainer;
 	import a3dparticle.generater.GeneraterBase;
 	import a3dparticle.particle.ParticleParam;
 	import a3dparticle.particle.ParticleSample;
+
 	import away3d.animators.IAnimationSet;
 	import away3d.bounds.AxisAlignedBoundingBox;
 	import away3d.bounds.BoundingVolumeBase;
@@ -15,13 +15,17 @@ package a3dparticle {
 	import away3d.core.base.Object3D;
 	import away3d.core.partition.EntityNode;
 	import away3d.entities.Entity;
+
+	import com.pro3games.particle.jumpStart.JumpStartNode;
+	import com.pro3games.particle.jumpStart.JumpStartTraverser;
+
 	
 
 	/**
 	 * A container of particles
 	 * @author liaocheng.Email:liaocheng210@126.com.
 	 */
-	public class ParticlesContainer extends Entity
+	public class ParticlesContainer extends Entity implements JumpStartNode
 	{
 		public var initParticleFun:Function;
 		
@@ -265,12 +269,12 @@ package a3dparticle {
 			return clone;
 		}
 
-		public function jumpStart(stage3DProxy:Stage3DProxy):void
+		public function acceptTraverser(jumpStartTraverser:JumpStartTraverser):void
 		{
 			var len:uint = _subContainers.length;
 			for (var i:uint = 0; i < len; ++i)
 			{
-				_subContainers[i].jumpStart(stage3DProxy);
+				_subContainers[i].acceptTraverser(jumpStartTraverser);
 			}
 		}
 		

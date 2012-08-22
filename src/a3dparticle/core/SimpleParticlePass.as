@@ -10,18 +10,24 @@ package a3dparticle.core {
 	import away3d.materials.lightpickers.LightPickerBase;
 	import away3d.materials.passes.MaterialPassBase;
 
+	import com.pro3games.particle.jumpStart.JumpStartTraverser;
+	import com.pro3games.particle.jumpStart.JumpStartee;
+	import com.pro3games.particle.jumpStart.JumpStarter;
+
 	import flash.display3D.Context3D;
 	import flash.display3D.Context3DProgramType;
 	import flash.display3D.Context3DVertexBufferFormat;
 	import flash.geom.Utils3D;
 	import flash.geom.Vector3D;
+
+
 	
 	use namespace arcane;
 	/**
 	 * ...
 	 * @author liaocheng
 	 */
-	public class SimpleParticlePass extends MaterialPassBase
+	public class SimpleParticlePass extends MaterialPassBase implements JumpStartee
 	{
 		private var _particleMaterial:ParticleMaterialBase;
 		private var _particleAnimation:ParticleAnimation;
@@ -116,10 +122,18 @@ package a3dparticle.core {
 			}
 		}
 
-		public function jumpStart(stage3DProxy:Stage3DProxy):void
+		public function acceptTraverser(jumpStartTraverser:JumpStartTraverser):void
 		{
-			updateProgram(stage3DProxy);
-			_particleMaterial.jumpStart(stage3DProxy);
+			jumpStartTraverser.apply(this);
+			
+			_particleMaterial.acceptTraverser(jumpStartTraverser);
+		}
+
+		public function jumpStart(jumpStarter:JumpStarter):void
+		{
+			updateProgram(jumpStarter.stage3DProxy);
+			
+			jumpStarter.exit(this);
 		}
 		
 	}

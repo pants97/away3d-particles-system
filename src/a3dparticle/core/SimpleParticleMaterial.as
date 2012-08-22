@@ -10,7 +10,13 @@ package a3dparticle.core {
 	import away3d.core.traverse.EntityCollector;
 	import away3d.materials.MaterialBase;
 
+	import com.pro3games.particle.jumpStart.JumpStartTraverser;
+	import com.pro3games.particle.jumpStart.JumpStartee;
+	import com.pro3games.particle.jumpStart.JumpStarter;
+
 	import flash.display3D.Context3D;
+
+
 	
 	
 	use namespace arcane;
@@ -18,7 +24,7 @@ package a3dparticle.core {
 	 * ...
 	 * @author liaocheng
 	 */
-	public class SimpleParticleMaterial extends MaterialBase
+	public class SimpleParticleMaterial extends MaterialBase implements JumpStartee
 	{
 		public var _screenPass : SimpleParticlePass;
 		private var _particleMaterial:ParticleMaterialBase;
@@ -101,15 +107,22 @@ package a3dparticle.core {
 			
 		}
 
-		public function jumpStart(stage3DProxy:Stage3DProxy):void
+		public function acceptTraverser(jumpStartTraverser:JumpStartTraverser):void
 		{
-			updatePassParameters();
-
+			jumpStartTraverser.apply(this);
+			
 			var numPasses:uint = this.numPasses;
 			for (var i:uint = 0; i < numPasses; ++i)
 			{
-				SimpleParticlePass(_passes[i]).jumpStart(stage3DProxy);
+				SimpleParticlePass(_passes[i]).acceptTraverser(jumpStartTraverser);
 			}
+		}
+
+		public function jumpStart(jumpStarter:JumpStarter):void
+		{
+			updatePassParameters();
+			
+			jumpStarter.exit(this);
 		}
 
 	}

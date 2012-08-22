@@ -1,25 +1,28 @@
-package a3dparticle.core
-{
+package a3dparticle.core {
+	import com.pro3games.particle.jumpStart.JumpStartTraverser;
+	import a3dparticle.ParticlesContainer;
 	import a3dparticle.animators.ParticleAnimationtor;
 	import a3dparticle.particle.ParticleMaterialBase;
-	import a3dparticle.ParticlesContainer;
 	import away3d.animators.IAnimator;
+	import away3d.arcane;
 	import away3d.core.base.IRenderable;
 	import away3d.core.managers.Stage3DProxy;
 	import away3d.entities.Entity;
 	import away3d.materials.MaterialBase;
+	import com.pro3games.particle.jumpStart.JumpStartee;
+	import com.pro3games.particle.jumpStart.JumpStarter;
 	import flash.display3D.IndexBuffer3D;
 	import flash.display3D.VertexBuffer3D;
 	import flash.geom.Matrix;
 	import flash.geom.Matrix3D;
-	
-	import away3d.arcane;
+
+
 	use namespace arcane;
 	/**
 	 * ...
 	 * @author liaocheng
 	 */
-	public class SubContainer implements IRenderable
+	public class SubContainer implements IRenderable, JumpStartee
 	{
 		private var _particleMaterial:ParticleMaterialBase;
 		private var _material:SimpleParticleMaterial;
@@ -243,16 +246,37 @@ package a3dparticle.core
 		{
 			return _shareAtt.geometryId;
 		}
-
-		public function jumpStart(stage3DProxy:Stage3DProxy):void
-		{
-			getVertexBuffer(stage3DProxy);
-			getIndexBuffer(stage3DProxy);
-			getUVBuffer(stage3DProxy);
-			_material.jumpStart(stage3DProxy);
-			particleAnimator.jumpStart(stage3DProxy, this);
-		}
 		
+		public function acceptTraverser(jumpStartTraverser:JumpStartTraverser):void
+		{
+			jumpStartTraverser.apply(this);
+			jumpStartTraverser.pushJumpStarter(this);
+
+			_material.acceptTraverser(jumpStartTraverser);
+			particleAnimator.acceptTraverser(jumpStartTraverser);
+		}
+
+		public function jumpStart(jumpStarter:JumpStarter):void
+		{
+			var stage3DProxy:Stage3DProxy = jumpStarter.stage3DProxy;
+			
+			if (jumpStarter.index == 0)
+			{
+				getVertexBuffer(stage3DProxy);
+			}
+			else if (jumpStarter.index == 1)
+			{
+				getIndexBuffer(stage3DProxy);
+			}
+			else if (jumpStarter.index == 2)
+			{
+				getUVBuffer(stage3DProxy);
+			}
+			if (++jumpStarter.index > 2)
+			{
+				jumpStarter.exit(this);
+			}
+		}
 	}
 }
 

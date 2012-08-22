@@ -9,14 +9,20 @@ package a3dparticle.particle {
 	import away3d.materials.utils.ShaderRegisterElement;
 	import away3d.textures.BitmapTexture;
 
+	import com.pro3games.particle.jumpStart.JumpStartTraverser;
+	import com.pro3games.particle.jumpStart.JumpStartee;
+	import com.pro3games.particle.jumpStart.JumpStarter;
+
 	import flash.display.BitmapData;
 	import flash.display3D.Context3DProgramType;
+
+
 	use namespace arcane;
 	/**
 	 * ...
 	 * @author liaocheng
 	 */
-	public class ParticleBitmapMaterial extends ParticleMaterialBase
+	public class ParticleBitmapMaterial extends ParticleMaterialBase implements JumpStartee
 	{
 		private var _texture:BitmapTexture;
 		
@@ -57,7 +63,7 @@ package a3dparticle.particle {
 			
 			if ((_finalBitmapDataReceived = (value && value != DefaultMaterialManager.getDefaultTexture().bitmapData)) && _jumpStartStage3DProxy)
 			{
-				jumpStart(_jumpStartStage3DProxy);
+				_texture.getTextureForStage3D(_jumpStartStage3DProxy);
 				_jumpStartStage3DProxy = null;
 			}
 		}
@@ -100,9 +106,15 @@ package a3dparticle.particle {
 			}
 		}
 		
-
-		override public function jumpStart(stage3DProxy:Stage3DProxy):void
+		override public function acceptTraverser(jumpStartTraverser:JumpStartTraverser):void
 		{
+			jumpStartTraverser.apply(this);
+		}
+
+		public function jumpStart(jumpStarter:JumpStarter):void
+		{
+			var stage3DProxy:Stage3DProxy = jumpStarter.stage3DProxy;
+			
 			if (_finalBitmapDataReceived)
 			{
 				_texture.getTextureForStage3D(stage3DProxy);
@@ -110,6 +122,8 @@ package a3dparticle.particle {
 			}
 
 			_jumpStartStage3DProxy = stage3DProxy;
+			
+			jumpStarter.exit(this);
 		}
 		
 	}

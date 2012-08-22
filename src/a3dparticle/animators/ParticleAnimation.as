@@ -1,28 +1,33 @@
-package a3dparticle.animators
-{
+package a3dparticle.animators {
 	import a3dparticle.animators.actions.ActionBase;
 	import a3dparticle.animators.actions.PerParticleAction;
 	import a3dparticle.animators.actions.TimeAction;
 	import a3dparticle.core.SimpleParticlePass;
 	import a3dparticle.core.SubContainer;
 	import a3dparticle.particle.ParticleParam;
+
 	import away3d.animators.IAnimationSet;
 	import away3d.animators.IAnimationState;
+	import away3d.arcane;
 	import away3d.core.base.IRenderable;
 	import away3d.core.managers.Stage3DProxy;
 	import away3d.materials.passes.MaterialPassBase;
 	import away3d.materials.utils.ShaderRegisterCache;
 	import away3d.materials.utils.ShaderRegisterElement;
+
+	import com.pro3games.particle.jumpStart.JumpStartNode;
+	import com.pro3games.particle.jumpStart.JumpStartTraverser;
+
 	import flash.display3D.Context3D;
 	import flash.display3D.Context3DProgramType;
-	
-	import away3d.arcane;
+
+
 	use namespace arcane;
 	/**
 	 * ...
 	 * @author ...
 	 */
-	public class ParticleAnimation implements IAnimationSet
+	public class ParticleAnimation implements IAnimationSet, JumpStartNode
 	{
 		public static const POST_PRIORITY:int = 9;
 		
@@ -364,13 +369,13 @@ package a3dparticle.animators
 		{
 			
 		}
-		
-		public function jumpStart(stage3DProxy:Stage3DProxy, subContainer:SubContainer):void
+
+		public function acceptTraverser(jumpStartTraverser:JumpStartTraverser):void
 		{
 			var len:uint = _particleActions.length;
 			for (var i:uint = 0; i < len; ++i)
 			{
-				_particleActions[i].jumpStart(stage3DProxy, subContainer);
+				_particleActions[i].acceptTraverser(jumpStartTraverser);
 			}
 		}
 		

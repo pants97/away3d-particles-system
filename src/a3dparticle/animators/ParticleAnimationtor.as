@@ -1,17 +1,22 @@
 package a3dparticle.animators {
-	import a3dparticle.core.SubContainer;
 	import away3d.animators.AnimatorBase;
 	import away3d.animators.IAnimator;
 	import away3d.animators.transitions.StateTransitionBase;
 	import away3d.core.base.IRenderable;
 	import away3d.core.managers.Stage3DProxy;
 	import away3d.materials.passes.MaterialPassBase;
+
+	import com.pro3games.particle.jumpStart.JumpStartNode;
+	import com.pro3games.particle.jumpStart.JumpStartTraverser;
+
 	import flash.display3D.Context3DProgramType;
+
+
 	/**
 	 * ...
 	 * @author ...
 	 */
-	public class ParticleAnimationtor extends AnimatorBase implements IAnimator
+	public class ParticleAnimationtor extends AnimatorBase implements IAnimator, JumpStartNode
 	{
 		private var _particleAnimation:ParticleAnimation;
 		
@@ -66,9 +71,9 @@ package a3dparticle.animators {
 			
 		}
 
-		public function jumpStart(stage3DProxy:Stage3DProxy, subContainer:SubContainer):void
+		public function acceptTraverser(jumpStartTraverser:JumpStartTraverser):void
 		{
-			_particleAnimation.jumpStart(stage3DProxy, subContainer);
+			_particleAnimation.acceptTraverser(jumpStartTraverser);
 		}
 		
 	}

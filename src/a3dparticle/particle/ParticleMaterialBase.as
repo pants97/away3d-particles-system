@@ -1,5 +1,4 @@
-package a3dparticle.particle
-{
+package a3dparticle.particle {
 	import a3dparticle.animators.ParticleAnimation;
 	import a3dparticle.core.SubContainer;
 
@@ -7,8 +6,13 @@ package a3dparticle.particle
 	import away3d.cameras.Camera3D;
 	import away3d.core.managers.Stage3DProxy;
 
+	import com.pro3games.particle.jumpStart.JumpStartNode;
+	import com.pro3games.particle.jumpStart.JumpStartTraverser;
+
 	import flash.display.BlendMode;
 	import flash.display3D.Context3DProgramType;
+
+
 
 	use namespace arcane;
 
@@ -16,7 +20,7 @@ package a3dparticle.particle
 	 * ...
 	 * @author liaocheng
 	 */
-	public class ParticleMaterialBase
+	public class ParticleMaterialBase implements JumpStartNode
 	{
 
 		// use for SimpleParticlePas clean the texture.
@@ -117,7 +121,7 @@ package a3dparticle.particle
 			}
 		}
 
-		public function jumpStart(stage3DProxy:Stage3DProxy):void
+		public function acceptTraverser(jumpStartTraverser:JumpStartTraverser):void
 		{
 		}
 	}

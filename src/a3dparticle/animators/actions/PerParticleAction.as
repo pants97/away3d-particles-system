@@ -1,18 +1,24 @@
-package a3dparticle.animators.actions
-{
+package a3dparticle.animators.actions {
 	import a3dparticle.core.SubContainer;
 	import a3dparticle.particle.ParticleParam;
+
+	import away3d.arcane;
 	import away3d.core.managers.Stage3DProxy;
+
+	import com.pro3games.particle.jumpStart.JumpStartTraverser;
+	import com.pro3games.particle.jumpStart.JumpStartee;
+	import com.pro3games.particle.jumpStart.JumpStarter;
+
 	import flash.display3D.Context3D;
 	import flash.display3D.VertexBuffer3D;
-	
-	import away3d.arcane;
+
+
 	use namespace arcane;
 	/**
 	 * ...
 	 * @author ...
 	 */
-	public class PerParticleAction extends ActionBase
+	public class PerParticleAction extends ActionBase implements JumpStartee
 	{
 		
 		protected var _vertexBuffer : VertexBuffer3D;
@@ -59,10 +65,16 @@ package a3dparticle.animators.actions
 			}
 			return t;
 		}
-		
-		override public function jumpStart(stage3DProxy:Stage3DProxy, subContainer:SubContainer):void
+
+		override public function acceptTraverser(jumpStartTraverser:JumpStartTraverser):void
 		{
-			getExtraBuffer(stage3DProxy, subContainer);
+			jumpStartTraverser.apply(this);
+		}
+		
+		public function jumpStart(jumpStarter:JumpStarter):void
+		{
+			getExtraBuffer(jumpStarter.stage3DProxy, jumpStarter.subContainer);
+			jumpStarter.exit(this);
 		}
 		
 	}

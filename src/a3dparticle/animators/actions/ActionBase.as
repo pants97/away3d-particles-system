@@ -1,17 +1,21 @@
 package a3dparticle.animators.actions 
 {
-	import a3dparticle.core.SubContainer;
 	import a3dparticle.animators.ParticleAnimation;
+
 	import away3d.core.base.IRenderable;
 	import away3d.core.managers.Stage3DProxy;
 	import away3d.materials.passes.MaterialPassBase;
 	import away3d.materials.utils.ShaderRegisterCache;
 
+	import com.pro3games.particle.jumpStart.JumpStartNode;
+	import com.pro3games.particle.jumpStart.JumpStartTraverser;
+
+
 	/**
 	 * ...
 	 * @author ...
 	 */
-	public class ActionBase 
+	public class ActionBase implements JumpStartNode
 	{
 		public var _animation:ParticleAnimation
 		
@@ -55,9 +59,8 @@ package a3dparticle.animators.actions
 			
 		}
 
-		public function jumpStart(stage3DProxy:Stage3DProxy, subContainer:SubContainer):void
+		public function acceptTraverser(jumpStartTraverser:JumpStartTraverser):void
 		{
-			
 		}
 		
 	}
