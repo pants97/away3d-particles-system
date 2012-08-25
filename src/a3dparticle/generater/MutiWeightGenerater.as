@@ -1,23 +1,25 @@
-package a3dparticle.generater 
+package a3dparticle.generater
 {
 	import a3dparticle.particle.ParticleSample;
+
 	/**
 	 * ...
 	 * @author liaocheng
 	 */
 	public class MutiWeightGenerater extends GeneraterBase
 	{
-		private var _vec:Vector.<ParticleSample>;
-		
-		public function MutiWeightGenerater(samples:Array,weights:Array,count:uint) 
+
+		public function MutiWeightGenerater(samples:Vector.<ParticleSample>, weights:Vector.<int>, count:uint)
 		{
+			super(count);
+			
 			var total:int = 0;
 			var i:uint;
 			var j:uint;
 			var current:Number;
-			var _weights:Array = [];
-			_vec = new  Vector.<ParticleSample>();
 			
+			var _weights:Vector.<int> = new Vector.<int>();
+
 			for (i = 0; i < samples.length; i++)
 			{
 				total += weights[i];
@@ -30,15 +32,11 @@ package a3dparticle.generater
 				{
 					if (current < _weights[i]) break;
 				}
-				_vec.push(samples[i]);
+				_particlesSamples[j] = samples[i];
 			}
-			
+
 		}
-		override public function get particlesSamples():Vector.<ParticleSample>
-		{
-			return _vec;
-		}
-		
+
 	}
 
 }

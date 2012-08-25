@@ -8,10 +8,16 @@ package a3dparticle.generater
 	public class GeneraterBase 
 	{
 		
-		
-		public function get particlesSamples():Vector.<ParticleSample>
+		protected var _particlesSamples:Vector.<ParticleSample>;
+
+		public function GeneraterBase(count:uint)
 		{
-			throw(new Error("this is a abstract function!"));
+			_particlesSamples = new Vector.<ParticleSample>(count, true);
+		}
+		
+		final public function get particlesSamples():Vector.<ParticleSample>
+		{
+			return _particlesSamples;
 		}
 		
 	}
