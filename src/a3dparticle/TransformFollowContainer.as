@@ -40,11 +40,9 @@ package a3dparticle
 			TransformFollowAnimator(_animator).followTarget = value;
 		}
 		
-		override protected function initParticleParam():ParticleParam
+		override public function initParticleParam(particleParam:ParticleParam):void
 		{
-			var param:ParticleParam = new ParticleParam();
-			param.sleepTime = defaultSleepTime;
-			return param;
+			particleParam.sleepTime = defaultSleepTime;
 		}
 		
 		/**
