@@ -29,6 +29,9 @@ package a3dparticle.animators.actions {
 		
 		protected var context3D:Context3D;
 		
+		private var _paramDirty:Boolean;
+		private var _bufferDirty:Boolean;
+		
 		public function PerParticleAction()
 		{
 
@@ -44,12 +47,23 @@ package a3dparticle.animators.actions {
 			
 		}
 		
+		public function invalidateBuffers():void
+		{
+			_paramDirty = true;
+			_bufferDirty = true;
+		}
+		
 		public function getExtraData(subContainer:SubContainer):Vector.<Number>
 		{
 			var t:Vector.<Number>;
 			if (!(t=subContainer.extraDatas[_name]))
 			{
 				t = subContainer.extraDatas[_name] = new Vector.<Number>;
+			}
+			else if (_paramDirty)
+			{
+				_paramDirty = false;
+				t.length = 0;
 			}
 			return t;
 		}
@@ -62,6 +76,12 @@ package a3dparticle.animators.actions {
 				t = subContainer.extraBuffers[_name] = stage3DProxy._context3D.createVertexBuffer(subContainer.extraDatas[_name].length / dataLenght, dataLenght);
 				t.uploadFromVector(subContainer.extraDatas[_name], 0, subContainer.extraDatas[_name].length / dataLenght);
 				context3D = stage3DProxy.context3D;
+			}
+			else if (_bufferDirty)
+			{
+				_bufferDirty = false;
+				t.uploadFromVector(subContainer.extraDatas[_name], 0, subContainer.extraDatas[_name].length / dataLenght);
+				
 			}
 			return t;
 		}

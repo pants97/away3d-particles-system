@@ -64,7 +64,7 @@ package a3dparticle.animators {
 		public var positionAttribute:ShaderRegisterElement;
 		public var uvAttribute:ShaderRegisterElement;
 		public var offsetTarget:ShaderRegisterElement;
-		public var scaleAndRotateTarget:ShaderRegisterElement
+		public var scaleAndRotateTarget:ShaderRegisterElement;
 		public var velocityTarget:ShaderRegisterElement;
 		public var vertexTime:ShaderRegisterElement;
 		public var vertexLife:ShaderRegisterElement;
@@ -72,7 +72,7 @@ package a3dparticle.animators {
 		public var OneConst:ShaderRegisterElement;
 		public var TwoConst:ShaderRegisterElement;
 		public var cameraPosConst:ShaderRegisterElement;
-		public var uvTarget:ShaderRegisterElement
+		public var uvTarget:ShaderRegisterElement;
 		//vary
 		private var varyTime:ShaderRegisterElement;
 		public var fragmentTime:ShaderRegisterElement;
@@ -377,6 +377,19 @@ package a3dparticle.animators {
 			{
 				_particleActions[i].acceptTraverser(jumpStartTraverser);
 			}
+		}
+		
+		public function invalidateParameters():void
+		{
+			var len:int = _perActions.length;
+			for (var i:int = 0; i < len; i++)
+			{
+				_perActions[i].invalidateBuffers();
+			}
+		}
+
+		public function get perActions():Vector.<PerParticleAction> {
+			return _perActions;
 		}
 		
 	}
