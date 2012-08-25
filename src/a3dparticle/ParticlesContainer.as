@@ -1,4 +1,5 @@
 package a3dparticle {
+	import a3dparticle.particle.ParticleParamPool;
 	import a3dparticle.animators.ParticleAnimation;
 	import a3dparticle.animators.ParticleAnimationtor;
 	import a3dparticle.animators.actions.ActionBase;
@@ -19,8 +20,6 @@ package a3dparticle {
 	import com.pro3games.particle.jumpStart.JumpStartNode;
 	import com.pro3games.particle.jumpStart.JumpStartTraverser;
 
-	
-
 	/**
 	 * A container of particles
 	 * @author liaocheng.Email:liaocheng210@126.com.
@@ -37,7 +36,9 @@ package a3dparticle {
 		protected var _alwaysInFrustum:Boolean;
 		
 		
-		public var _subContainers : Vector.<SubContainer>;
+		public var _subContainers:Vector.<SubContainer>;
+		
+		private var _particleSamples:Vector.<ParticleSample>;
 		
 		public function ParticlesContainer(isClone:Boolean=false)
 		{
@@ -121,7 +122,7 @@ package a3dparticle {
 			
 			_particleAnimation.startGen();
 
-			var _vec:Vector.<ParticleSample> = generater.particlesSamples;
+			_particleSamples = generater.particlesSamples;
 			
 			var vertexData:Vector.<Number>;
 			var uvData:Vector.<Number>;
@@ -135,12 +136,12 @@ package a3dparticle {
 			var tempIndex:uint;
 			var nowVertexLen:int;
 			var sample:ParticleSample;
-			var numSamples:uint = _vec.length;
+			var numSamples:uint = _particleSamples.length;
 			var subContainer:SubContainer;
 			
 			for (var i:uint = 0; i < numSamples; i++)
 			{
-				sample = _vec[i];
+				sample = _particleSamples[i];
 				for (j = 0; j < _subContainers.length; j++)
 				{
 					subContainer = _subContainers[j];
@@ -171,7 +172,8 @@ package a3dparticle {
 					subUVData.push(uvData[tempIndex], uvData[tempIndex + 1]);
 				}
 				
-				param = initParticleParam();
+				param = ParticleParamPool.get();
+				initParticleParam(param);
 				param.total = numSamples;
 				param.index = i;
 				param.sample = sample;
@@ -179,6 +181,9 @@ package a3dparticle {
 				if (initParticleFun != null) initParticleFun(param);
 				
 				_particleAnimation.genOne(param);
+				
+				ParticleParamPool.put(param);
+				
 				length = vertexData.length;
 				for (tempIndex = 0; tempIndex < length; tempIndex += 3)
 				{
@@ -192,9 +197,8 @@ package a3dparticle {
 			
 		}
 		
-		protected function initParticleParam():ParticleParam
+		public function initParticleParam(particleParam:ParticleParam):void
 		{
-			return new ParticleParam;
 		}
 		
 		public function start():void
@@ -248,6 +252,8 @@ package a3dparticle {
 			clone._animator = new ParticleAnimationtor(_particleAnimation);
 			clone._subContainers = new Vector.<SubContainer>();
 			clone._isStart = _isStart;
+			clone._particleSamples = _particleSamples;
+			clone.initParticleFun = initParticleFun;
 			clone.alwaysInFrustum = alwaysInFrustum;
 			
 			if (_isStart) clone.start();
@@ -276,6 +282,14 @@ package a3dparticle {
 			{
 				_subContainers[i].acceptTraverser(jumpStartTraverser);
 			}
+		}
+
+		public function get particleSamples():Vector.<ParticleSample> {
+			return _particleSamples;
+		}
+
+		public function get particleAnimation():ParticleAnimation {
+			return _particleAnimation;
 		}
 		
 	}
