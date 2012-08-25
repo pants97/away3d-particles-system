@@ -17,7 +17,7 @@ package a3dparticle.animators.actions
 	 */
 	public class ActionBase implements JumpStartNode
 	{
-		public var _animation:ParticleAnimation
+		public var _animation:ParticleAnimation;
 		
 		public var priority:int=1;
 		
