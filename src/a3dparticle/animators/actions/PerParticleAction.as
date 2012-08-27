@@ -86,7 +86,7 @@ package a3dparticle.animators.actions {
 			return t;
 		}
 
-		override public function acceptTraverser(jumpStartTraverser:JumpStartTraverser):void
+		public function acceptTraverser(jumpStartTraverser:JumpStartTraverser):void
 		{
 			jumpStartTraverser.apply(this);
 		}

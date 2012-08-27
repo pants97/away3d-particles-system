@@ -372,10 +372,10 @@ package a3dparticle.animators {
 
 		public function acceptTraverser(jumpStartTraverser:JumpStartTraverser):void
 		{
-			var len:uint = _particleActions.length;
+			var len:uint = _perActions.length;
 			for (var i:uint = 0; i < len; ++i)
 			{
-				_particleActions[i].acceptTraverser(jumpStartTraverser);
+				_perActions[i].acceptTraverser(jumpStartTraverser);
 			}
 		}
 		

@@ -123,6 +123,7 @@ package a3dparticle.particle {
 
 		public function acceptTraverser(jumpStartTraverser:JumpStartTraverser):void
 		{
+			//override
 		}
 	}
 
